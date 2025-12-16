@@ -1,17 +1,12 @@
 package game;
 
 import java.awt.Color;
-import java.awt.Container;
 import java.awt.Graphics;
-
-import javax.swing.DebugGraphics;
 
 import model.entities.Player;
 import model.levels.LevelManager;
 import model.tiles.Tiles;
 import model.util.Constants;
-import model.util.Constants.Game.*;
-import model.util.LoadSave;
 
 public class Game implements Runnable{
 	
@@ -44,7 +39,8 @@ public class Game implements Runnable{
 		Tiles.loadTilesData();
 		
 		levelManager = new LevelManager(this);
-		player = new Player(200, 200, Constants.Player.PLAYER_WIDTH, Constants.Player.PLAYER_HEIGHT);
+		player = new Player(400, 434, Constants.Player.PLAYER_WIDTH, Constants.Player.PLAYER_HEIGHT);
+		player.loadLevelData(levelManager.getCurrentLevel().getLevelData());
 	}
 
 	private void startGameLoop() {
@@ -62,15 +58,18 @@ public class Game implements Runnable{
 		levelManager.render(g);
 		player.render(g);
 		
-		if (Constants.GameConfig.debugMode) {debugInfoScreen(g);}
-		
+		debugInfoScreen(g);
 	}
 	
 	
-	
 	private void debugInfoScreen(Graphics g) {
+		if (!Constants.GameConfig.debugMode)
+			return;
+		
 		g.setColor(Color.black);
 		g.drawString("FPS: " + gameFrames + " | UPS: " + gameUpdates, 0, g.getFont().getSize());
+		g.drawString("Player -> X = " + player.getHitbox().getX() + " | Y = " + player.getHitbox().getY(), 
+				0, g.getFont().getSize() * 2);
 	}
 	
 	
@@ -140,7 +139,5 @@ public class Game implements Runnable{
 	
 	// ========== GETTERS ==========
 	public Player getPlayer() {return player;}
-
-	
 	
 }

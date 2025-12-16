@@ -4,6 +4,7 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
 import game.Game;
+import model.levels.Level;
 import model.util.LoadSave;
 import model.util.Constants;
 
@@ -55,6 +56,10 @@ public class LevelManager {
 	
 	public void update() {
 		
+	}
+	
+	public Level getCurrentLevel() {
+		return levelOne;
 	}
 	
 }

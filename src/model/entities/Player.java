@@ -10,6 +10,7 @@ import javax.imageio.ImageIO;
 import game.Game;
 import model.util.Constants;
 import model.util.LoadSave;
+import static model.util.HelpMethods.canMoveHere;
 
 public class Player extends Entity {
 	
@@ -21,18 +22,24 @@ public class Player extends Entity {
     private float playerSpeed = playerSpeedDefault * Constants.Game.SCALE;
     private boolean playerMoving = false, playerAttacking = false;
     private boolean up, left, down, right;
+    private int[][] levelData;
+    private float xDrawOffset = 24 * Constants.Game.SCALE;
+    private float yDrawOffset = 33 * Constants.Game.SCALE;
 	
 	// ========== CONSTRUCTOR ==========
 	public Player(float x, float y, int width, int height) {
 		super(x, y, width, height);
 		loadAnimations();
+		initializeHitbox(
+				x, 
+				y, 
+				16 * Constants.Game.SCALE, 
+				30 * Constants.Game.SCALE);
 	}
 	
 	// ========== UPDATING PLAYER ==========
 	public void update() {
 		updatePosition();
-		updateHitbox();
-		//updateAnimationTick(); // Update animation frame
     	setAnimation();
     	
 	}
@@ -54,8 +61,8 @@ public class Player extends Entity {
          */
         g.drawImage(
     		playerAnimations[playerAction][animationIndex], 
-    		(int) x, 
-    		(int) y, 
+    		(int) (hitbox.x - xDrawOffset), 
+    		(int) (hitbox.y - yDrawOffset), 
     		(int) (width), 
     		(int) (height), 
     		null, 
@@ -95,6 +102,10 @@ public class Player extends Entity {
         // repaint(); // Uncomment if needed to refresh panel
     }
     
+    public void loadLevelData(int[][] levelData) {
+    	this.levelData = levelData;
+    }
+    
     /**
      * Updates the position of the player if isMoving is true when a key is pressed. <br>
      * It takes the direction and adds to xDelta and yDelta.<br>
@@ -102,32 +113,57 @@ public class Player extends Entity {
      * It is a method to be placed in "update()," not to be used by the programmer.
      */
 	private void updatePosition() {
-		
 		playerMoving = false;
 		
+		/**
+		 *  This is for performance. 
+		 *  if the player isn't moving, 
+		 *  there is no point of checking all 
+		 *  the IF's about the player's movement
+		 */
+		if (!left && !right && !up && !down) 
+			return;
+		
+		float xSpeed = 0, ySpeed = 0;
 		
 		/* If left is being pressed but right isn't, go left. 
 		 * The player might press both at the same time.
 		 */
-		if (left && !right) {
-			x -= playerSpeed;
-			playerMoving = true;
-		}
-		else if (right && !left) {
-			x += playerSpeed;
-			playerMoving = true;
-		}
+		if (left && !right)
+			xSpeed = -playerSpeed;
+		else if (right && !left)
+			xSpeed = playerSpeed;
 		
 		/* If up is being pressed but down isn't, go up. 
 		 */
-		if (up && !down) {
-			y -= playerSpeed;
+		if (up && !down)
+			ySpeed = -playerSpeed;
+		else if (down && !up)
+			ySpeed = playerSpeed;
+		
+//		if (canMoveHere(
+//				x + xSpeed, 
+//				y + ySpeed, 
+//				width, 
+//				height, 
+//				levelData)) {
+//			this.x += xSpeed;
+//			this.y += ySpeed;
+//			playerMoving = true;
+//		}
+		
+		if (canMoveHere(
+				hitbox.x + xSpeed, 
+				hitbox.y + ySpeed, 
+				hitbox.width, 
+				hitbox.height, 
+				levelData)) 
+		{
+			hitbox.x += xSpeed;
+			hitbox.y += ySpeed;
 			playerMoving = true;
 		}
-		else if (down && !up) {
-			y += playerSpeed;
-			playerMoving = true;
-		}
+		
 	}
 
 	private void setAnimation() {

@@ -19,11 +19,11 @@ public class Constants {
 		public static final int FPS_SET = 60;
 		public static final int UPS_SET = 120;
 		
-		public static boolean debugMode = false;
+		public static boolean debugMode = true;
 		
 	    public static final String MAJOR_VERSION = "0";
 	    public static final String MINOR_VERSION = "9";
-	    public static final String PATCH_VERSION = "0";
+	    public static final String PATCH_VERSION = "2";
 	    
 	    public static final String TITLE = "College IHM Game Title";
 	    
@@ -77,6 +77,17 @@ public class Constants {
 	
 	public static class GameLevels {
 		public final static String LEVEL_ONE_DATA = "/levels_data/0.png";
+	}
+	
+	public static class Level {
+		public static final String SPRITE_SHEET_PATH = "/tiles_sprite_sheet.png";
+		public static final int SPRITES_IN_ATLAS_WIDTH = 10;
+		public static final int SPRITES_IN_ATLAS_HEIGHT = 1;
+		public static final int NUMBER_OF_SPRITES_IN_ATLAS = (
+				SPRITES_IN_ATLAS_WIDTH * 
+				SPRITES_IN_ATLAS_HEIGHT
+				);  // Width * height
+		
 	}
 	
 	
@@ -149,17 +160,6 @@ public class Constants {
 	                return 1;
 	        }
 	    }
-	}
-	
-	public static class Level {
-		public static final String SPRITE_SHEET_PATH = "/tiles_sprite_sheet.png";
-		public static final int SPRITES_IN_ATLAS_WIDTH = 10;
-		public static final int SPRITES_IN_ATLAS_HEIGHT = 1;
-		public static final int NUMBER_OF_SPRITES_IN_ATLAS = (
-				SPRITES_IN_ATLAS_WIDTH * 
-				SPRITES_IN_ATLAS_HEIGHT
-				);  // Width * height
-		
 	}
 	
 	// ========== DIRECTIONS ==========
