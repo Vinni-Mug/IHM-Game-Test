@@ -18,7 +18,7 @@ public class MouseInputs implements MouseListener, MouseMotionListener{
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
-		gamePanel.setRecPos(e.getX() - 32, e.getY() - 32);
+//		if (e.getButton() == MouseEvent.BUTTON3) {tpPlayer(e);}
 	}
 
 	@Override
@@ -29,12 +29,17 @@ public class MouseInputs implements MouseListener, MouseMotionListener{
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		gamePanel.setRecPos(e.getX() - 32, e.getY() - 32);
+		if (e.getButton() == MouseEvent.BUTTON1) {
+			playerAttack(e);
+		}
+		if (e.getButton() == MouseEvent.BUTTON3) {
+			tpPlayer(e);
+		}
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		gamePanel.setRecPos(e.getX() - 32, e.getY() - 32);
+//		if (e.getButton() == MouseEvent.BUTTON3) {tpPlayer(e);}
 	}
 
 	@Override
@@ -53,6 +58,14 @@ public class MouseInputs implements MouseListener, MouseMotionListener{
 	public void mouseExited(MouseEvent e) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	private void  playerAttack(MouseEvent e) {
+		gamePanel.getGame().getPlayer().setPlayerAttacking(true);
+	}
+	
+	private void tpPlayer(MouseEvent e) {
+		gamePanel.getGame().getPlayer().setPlayerPos(e.getX() - 64, e.getY() - 96);
 	}
 
 }

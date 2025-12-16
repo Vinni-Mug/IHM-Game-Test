@@ -2,9 +2,9 @@ package game;
 
 public class GameConfig {
 	
-    public static final int MAJOR_VERSION = 0;
-    public static final int MINOR_VERSION = 3;
-    public static final int PATCH_VERSION = 2;
+    public static final String MAJOR_VERSION = "0";
+    public static final String MINOR_VERSION = "5";
+    public static final String PATCH_VERSION = "3";
     
     public static final String TITLE = "College IHM Game Title";
     

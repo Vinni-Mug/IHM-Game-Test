@@ -1,101 +1,63 @@
 package game;
 
-import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
-import java.util.Random;
-
 import javax.swing.JPanel;
 
 import controller.inputs.KeyboardInputs;
 import controller.inputs.MouseInputs;
+import model.util.Constants;
+import model.util.Constants.Game.*;
 
 public class GamePanel extends JPanel {
-	
-	private MouseInputs mouseInput;
-	private float xDelta = 0, yDelta = 0;
-	private float xDir = 4, yDir = 4;
-	
-	private Color color = new Color(0, 0, 0);
-	private Random random;
-	
-	//========== WHERE THE CODE RUNS ==========
-	public GamePanel () {
-		random = new Random();
-		
-		this.setFocusable(true);
-		this.requestFocus();
-		this.addKeyListener(new KeyboardInputs(this));
-		
-		mouseInput = new MouseInputs(this);
-		
-		this.addMouseListener(mouseInput);
-		this.addMouseMotionListener(mouseInput);
-	}
-	
-	public void changeXDelta(int v) {
-		
-		// This If Statement prevents the square from going too much to the right and leaving the screen.
-		if (xDelta + 64 >= this.getWidth() && v > 0) {
-			xDir *= -1.01;
-			color = getRandomColor();
-			return;
-		}
-		
-		// This If Statement prevents the square from going too much to the left and leaving the screen.
-		if (xDelta <= 0 && v < 0) {
-			xDir *= -1.01;
-			color = getRandomColor();
-			return;
-		}
-		
-		xDelta += v;
-		//repaint();
-	}
-	
-	public void changeYDelta(int v) {
-		
-		// This If Statement prevents the square from going too much to the right and leaving the screen.
-		if (yDelta + 64 >= this.getHeight() && v > 0) {
-			yDir *= -1.01; 
-			color = getRandomColor();
-			return;
-		}
-		
-		// This If Statement prevents the square from going too much to the left and leaving the screen.
-		if (yDelta <= 0 && v < 0) {
-			yDir *= -1.01; 
-			color = getRandomColor();
-			return;
-		}
-		
-		yDelta += v;
-		//repaint();
-	}
-	
-	public void setRecPos(int x, int y) {
-		this.xDelta = x;
-		this.yDelta = y;
-		//repaint();
-	}
-	
-	//========== DRAWING THE CANVAS ==========
-	public void paintComponent(Graphics g) {
-		super.paintComponent(g);  // Important to avoid image bugs.
-		
-		updateRectangle();
-		
-		g.setColor(color);
-		g.fillRect((int) xDelta, (int) yDelta, 64, 64);
-		
-		
-	}
+    
+    private MouseInputs mouseInput;
+    private Game game;
+    
+    //========== WHERE THE CODE RUNS ==========//
+    public GamePanel(Game game) {
+        mouseInput = new MouseInputs(this);
+        this.game = game;
+        
+        setFocusable(true);
+        requestFocus(); // Ensure the panel receives keyboard input
+        
+        setPanelSize(); // Set preferred panel size
+        
+        // Register input listeners
+        addKeyListener(new KeyboardInputs(this));
+        addMouseListener(mouseInput);
+        addMouseMotionListener(mouseInput);
+    }
 
-	private void updateRectangle() {
-		changeXDelta((int) xDir);
-		changeYDelta((int) yDir);
+    public void updateGame() {
+    	
+	}
+    
+    public void renderGame() {
+    	repaint();
+    }
+    
+    //========== DRAWING THE CANVAS ==========//
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g); // Prevents graphical artifacts
+        game.render(g);
+    }
+
+	//========== SETTING THE GAME/PANEL SIZE ==========
+	private void setPanelSize() {
+		System.out.println("Setting GamePanel size: " + Constants.Game.GAME_WIDTH + " x " + Constants.Game.GAME_HEIGHT);
+		Dimension size = new Dimension(Constants.Game.GAME_WIDTH, Constants.Game.GAME_HEIGHT);
+		setMinimumSize(size);
+		setPreferredSize(size);
+		setMaximumSize(size);
 	}
 	
-	private Color getRandomColor() {
-		return new Color(random.nextInt(255), random.nextInt(255), random.nextInt(255));
-	}
+	/**
+	 * <b> Disclaimer: </b> It's called updateGame instead of update to <br>
+	 * avoid confusion with the method update from JPanel
+	 */
+	
+	public Game getGame() {return game;}
 }
